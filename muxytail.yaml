@@ -1,0 +1,18 @@
+files:
+- a
+- b
+
+colorize:
+  Danger:
+  - 'Blocking ".*" (forever|for [0-9]* secs) .*'
+  Blue:
+  # - '\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}'
+  Green:
+  - 'Accepted [^ ]* for [^ ]* from [^ ]* port.*'
+  Red:
+  - kernel
+  - 'kernel: .* segfault at .*'
+  - 'Attack from.*with danger.*'
+  - 'Invalid user [^ ]* from [0-9\.]*'
+  - 'Disconnecting: Too many authentication failures for.*'
+  - 'ASSERTION FAILED: .*'
