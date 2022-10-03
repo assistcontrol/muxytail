@@ -1,4 +1,4 @@
-module adamw.org/muxytail
+module github.com/assistcontrol/muxytail
 
 go 1.19
 
