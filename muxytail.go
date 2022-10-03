@@ -10,7 +10,7 @@ import (
 	"strings"
 	"syscall"
 
-	"adamw.org/muxytail/caddy"
+	"github.com/assistcontrol/muxytail/caddy"
 
 	"github.com/nxadm/tail"
 	"golang.org/x/term"
