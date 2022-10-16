@@ -60,7 +60,7 @@ func main() {
 	for {
 		select {
 		case line := <-textChannel:
-			fmt.Println(Format(line))
+			fmt.Println(line)
 		case <-stdinChannel:
 			fmt.Println(separator())
 		case <-signalChannel:
@@ -97,7 +97,9 @@ func watchFile(path string, c chan<- string) {
 	}
 
 	for line := range t.Lines {
-		c <- line.Text
+		go func(txt string) {
+			c <- Format(txt)
+		}(line.Text)
 	}
 }
 
