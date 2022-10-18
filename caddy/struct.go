@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fatih/color"
+	"github.com/assistcontrol/muxytail/color"
 	"github.com/mileusna/useragent"
 )
 
@@ -130,10 +130,12 @@ func (cUA caddyUserAgent) String() string {
 // HELPER FUNCTIONS
 //
 
-func blue(s string) string   { return color.BlueString(s) }
-func green(s string) string  { return color.GreenString(s) }
-func yellow(s string) string { return color.YellowString(s) }
-func red(s string) string    { return color.RedString(s) }
+var (
+	blue   = color.Blue.Colorizer
+	green  = color.Green.Colorizer
+	yellow = color.Yellow.Colorizer
+	red    = color.Red.Colorizer
+)
 
 // major returns the major only from a semver version string
 func major(s string) string {

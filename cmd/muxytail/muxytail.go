@@ -11,10 +11,10 @@ import (
 	"syscall"
 
 	"github.com/assistcontrol/muxytail/caddy"
+	"github.com/assistcontrol/muxytail/color"
 
 	"github.com/nxadm/tail"
 	"golang.org/x/term"
-	"gopkg.in/yaml.v3"
 )
 
 // Default path to the config file. Can be overridden with --config.
@@ -69,25 +69,6 @@ func main() {
 	}
 }
 
-// loadConfig reads the config file and parses the YAML. It
-// returns a muxytailConf populated with the YAML data.
-func loadConfig(path string) *muxytailConf {
-	// Read in the config file
-	confBytes, err := os.ReadFile(path)
-	if err != nil {
-		log.Fatalln("ReadFile:", err)
-	}
-
-	// Unmarshal the config into a muxytailConf
-	var config muxytailConf
-	err = yaml.Unmarshal(confBytes, &config)
-	if err != nil {
-		log.Fatalln("YAML parse:", err)
-	}
-
-	return &config
-}
-
 // watchFile tails a given path and sends all new lines up the provided
 // channel.
 func watchFile(path string, c chan<- string) {
@@ -124,8 +105,8 @@ func Format(s string) string {
 
 	// Not a caddy string. Iterate over each Color and apply all of
 	// the regexps associated with that color.
-	for _, clr := range Colors {
-		s = clr.colorize(s)
+	for _, clr := range color.Colors {
+		s = clr.Colorize(s)
 	}
 
 	return s
@@ -139,5 +120,5 @@ func separator() string {
 		log.Fatalln("term.GetSize:", err)
 	}
 
-	return Red.Colorizer(strings.Repeat("─", width))
+	return color.Red.Colorizer(strings.Repeat("─", width))
 }

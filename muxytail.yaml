@@ -9,7 +9,7 @@ colorize:
   # - '\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}'
   Green:
   - 'Accepted [^ ]* for [^ ]* from [^ ]* port.*'
-  Red:
+  BoldRed:
   - kernel
   - 'kernel: .* segfault at .*'
   - 'Attack from.*with danger.*'
