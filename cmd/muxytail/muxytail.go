@@ -120,5 +120,5 @@ func separator() string {
 		log.Fatalln("term.GetSize:", err)
 	}
 
-	return color.Red.Colorizer(strings.Repeat("─", width))
+	return color.Colors["BoldRed"].Colorizer(strings.Repeat("─", width))
 }

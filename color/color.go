@@ -7,40 +7,37 @@ import (
 	termcolor "github.com/fatih/color"
 )
 
-// Colors
-var (
-	Colors = []*Color{BoldRed, Danger, Blue, Green, Yellow, Red}
-
-	BoldRed = &Color{
+var Colors = map[string]*Color{
+	"BoldRed": {
 		Colorizer: termcolor.New(termcolor.FgRed).Add(termcolor.Bold).Sprint,
 		ConfigKey: "BoldRed",
-	}
+	},
 
-	Danger = &Color{
+	"Danger": {
 		Colorizer: termcolor.New(termcolor.FgWhite).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint,
 		ConfigKey: "Danger",
-	}
+	},
 
-	Blue = &Color{
+	"Blue": {
 		Colorizer: termcolor.New(termcolor.FgBlue).Sprint,
 		ConfigKey: "Blue",
-	}
+	},
 
-	Green = &Color{
+	"Green": {
 		Colorizer: termcolor.New(termcolor.FgGreen).Sprint,
 		ConfigKey: "Green",
-	}
+	},
 
-	Yellow = &Color{
+	"Yellow": {
 		Colorizer: termcolor.New(termcolor.FgYellow).Sprint,
 		ConfigKey: "Yellow",
-	}
+	},
 
-	Red = &Color{
+	"Red": {
 		Colorizer: termcolor.New(termcolor.FgRed).Sprint,
 		ConfigKey: "Red",
-	}
-)
+	},
+}
 
 // struct Color holds the configuration for each handled termcolor.
 type Color struct {

@@ -131,10 +131,10 @@ func (cUA caddyUserAgent) String() string {
 //
 
 var (
-	blue   = color.Blue.Colorizer
-	green  = color.Green.Colorizer
-	yellow = color.Yellow.Colorizer
-	red    = color.Red.Colorizer
+	blue   = color.Colors["Blue"].Colorizer
+	green  = color.Colors["Green"].Colorizer
+	yellow = color.Colors["Yellow"].Colorizer
+	red    = color.Colors["Red"].Colorizer
 )
 
 // major returns the major only from a semver version string
