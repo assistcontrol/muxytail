@@ -71,15 +71,15 @@ func watchFile(path string, c chan<- string) {
 	}
 
 	for line := range t.Lines {
-		go func(txt string) {
-			c <- format(txt)
+		go func(s string) {
+			c <- format(s)
 		}(line.Text)
 	}
 }
 
 // watchStdin sends a message up the provided channel whenever Enter
 // is pressed. It uses password mode so that the input doesn't echo.
-func watchStdin(c chan bool) {
+func watchStdin(c chan<- bool) {
 	for {
 		if _, err := term.ReadPassword(int(os.Stdin.Fd())); err != nil {
 			log.Fatalln("ReadPassword:", err)
@@ -96,11 +96,8 @@ func format(s string) string {
 		return s
 	}
 
-	// Not a caddy string. Iterate over each Color and apply all of
-	// the regexps associated with that color.
-	for _, clr := range color.Colors {
-		s = clr.Colorize(s)
-	}
+	// Not a caddy string. Apply regexp colorizers.
+	s = color.Colorize(s)
 
 	return s
 }
@@ -113,5 +110,5 @@ func separator() string {
 		log.Fatalln("term.GetSize:", err)
 	}
 
-	return color.Colors["BoldRed"].Colorizer(strings.Repeat("─", width))
+	return color.ColorizeString("BoldRed", strings.Repeat("─", width))
 }

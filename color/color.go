@@ -2,6 +2,7 @@ package color
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 
 	termcolor "github.com/fatih/color"
@@ -24,6 +25,26 @@ type Color struct {
 	RE []*regexp.Regexp
 	// Colorizer is a Sprint() method of a color from fatih/color
 	Colorizer func(...any) string
+}
+
+// ColorizeString returns the string argument in a specific color.
+func ColorizeString(clr, s string) string {
+	c, ok := Colors[clr]
+	if !ok {
+		log.Fatalln("Color not found:", clr)
+	}
+
+	return c.Colorizer(s)
+}
+
+// Colorize iterates over each Color and applies all of the regexps
+// associated with that color to the supplied string.
+func Colorize(s string) string {
+	for _, clr := range Colors {
+		s = clr.Colorize(s)
+	}
+
+	return s
 }
 
 // c.AddRE turns a slice of strings into regexps and attaches them

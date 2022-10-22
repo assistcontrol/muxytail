@@ -130,12 +130,10 @@ func (cUA caddyUserAgent) String() string {
 // HELPER FUNCTIONS
 //
 
-var (
-	blue   = color.Colors["Blue"].Colorizer
-	green  = color.Colors["Green"].Colorizer
-	yellow = color.Colors["Yellow"].Colorizer
-	red    = color.Colors["Red"].Colorizer
-)
+func blue(s string) string   { return color.ColorizeString("Blue", s) }
+func green(s string) string  { return color.ColorizeString("Green", s) }
+func yellow(s string) string { return color.ColorizeString("Yellow", s) }
+func red(s string) string    { return color.ColorizeString("Red", s) }
 
 // major returns the major only from a semver version string
 func major(s string) string {
