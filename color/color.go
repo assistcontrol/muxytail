@@ -7,36 +7,15 @@ import (
 	termcolor "github.com/fatih/color"
 )
 
+// map Colors is the list of known colors. After adding a color
+// here, be sure to add a key of the same name in muxytail.conf.
 var Colors = map[string]*Color{
-	"BoldRed": {
-		Colorizer: termcolor.New(termcolor.FgRed).Add(termcolor.Bold).Sprint,
-		ConfigKey: "BoldRed",
-	},
-
-	"Danger": {
-		Colorizer: termcolor.New(termcolor.FgWhite).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint,
-		ConfigKey: "Danger",
-	},
-
-	"Blue": {
-		Colorizer: termcolor.New(termcolor.FgBlue).Sprint,
-		ConfigKey: "Blue",
-	},
-
-	"Green": {
-		Colorizer: termcolor.New(termcolor.FgGreen).Sprint,
-		ConfigKey: "Green",
-	},
-
-	"Yellow": {
-		Colorizer: termcolor.New(termcolor.FgYellow).Sprint,
-		ConfigKey: "Yellow",
-	},
-
-	"Red": {
-		Colorizer: termcolor.New(termcolor.FgRed).Sprint,
-		ConfigKey: "Red",
-	},
+	"Blue":    {Colorizer: termcolor.New(termcolor.FgBlue).Sprint},
+	"Green":   {Colorizer: termcolor.New(termcolor.FgGreen).Sprint},
+	"Yellow":  {Colorizer: termcolor.New(termcolor.FgYellow).Sprint},
+	"Red":     {Colorizer: termcolor.New(termcolor.FgRed).Sprint},
+	"BoldRed": {Colorizer: termcolor.New(termcolor.FgRed).Add(termcolor.Bold).Sprint},
+	"Danger":  {Colorizer: termcolor.New(termcolor.FgWhite).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint},
 }
 
 // struct Color holds the configuration for each handled termcolor.
@@ -45,9 +24,6 @@ type Color struct {
 	RE []*regexp.Regexp
 	// Colorizer is a Sprint() method of a color from fatih/color
 	Colorizer func(...any) string
-	// ConfigKey is the key name (under Colorize) in the conf file
-	// where REs are listed
-	ConfigKey string
 }
 
 // c.AddRE turns a slice of strings into regexps and attaches them

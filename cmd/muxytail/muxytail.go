@@ -20,12 +20,6 @@ import (
 // Default path to the config file. Can be overridden with --config.
 const defaultConfigFile = "/usr/local/etc/muxytail.yaml"
 
-// Config
-type muxytailConf struct {
-	Files    []string
-	Colorize map[string][]string
-}
-
 var tailConfig = tail.Config{
 	Location: &tail.SeekInfo{
 		Whence: io.SeekEnd,
@@ -42,17 +36,16 @@ func main() {
 	config := loadConfig(*configFile)
 	loadColors(config)
 
-	signalChannel := make(chan os.Signal, 2)
-	stdinChannel := make(chan bool)
-	textChannel := make(chan string)
-
 	// Trap SIGQUIT to ignore ^\
+	signalChannel := make(chan os.Signal, 2)
 	signal.Notify(signalChannel, syscall.SIGQUIT)
 
 	// Watch for Enter
+	stdinChannel := make(chan bool)
 	go watchStdin(stdinChannel)
 
 	// Each file sends log lines to textChannel
+	textChannel := make(chan string)
 	for _, path := range config.Files {
 		go watchFile(path, textChannel)
 	}
@@ -70,7 +63,7 @@ func main() {
 }
 
 // watchFile tails a given path and sends all new lines up the provided
-// channel.
+// channel after formatting.
 func watchFile(path string, c chan<- string) {
 	t, err := tail.TailFile(path, tailConfig)
 	if err != nil {
@@ -79,7 +72,7 @@ func watchFile(path string, c chan<- string) {
 
 	for line := range t.Lines {
 		go func(txt string) {
-			c <- Format(txt)
+			c <- format(txt)
 		}(line.Text)
 	}
 }
@@ -96,9 +89,9 @@ func watchStdin(c chan bool) {
 	}
 }
 
-// Format is the master function for log line manipulation. It returns
+// format is the master function for log line manipulation. It returns
 // its string argument converted, formatted, and colorized.
-func Format(s string) string {
+func format(s string) string {
 	if s, converted := caddy.Convert(s); converted {
 		return s
 	}

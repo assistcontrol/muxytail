@@ -8,6 +8,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Config
+type muxytailConf struct {
+	Files    []string
+	Colorize map[string][]string
+}
+
 // loadConfig reads the config file and parses the YAML. It
 // returns a muxytailConf populated with the YAML data.
 func loadConfig(path string) *muxytailConf {
@@ -29,7 +35,7 @@ func loadConfig(path string) *muxytailConf {
 
 // loadColors adds the provided regexps into each color's Color struct.
 func loadColors(conf *muxytailConf) {
-	for _, clr := range color.Colors {
-		clr.AddRE(conf.Colorize[clr.ConfigKey])
+	for colorName, clr := range color.Colors {
+		clr.AddRE(conf.Colorize[colorName])
 	}
 }

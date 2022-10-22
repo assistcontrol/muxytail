@@ -49,20 +49,12 @@ func (cL *caddyLog) URL() string {
 // CADDY LOG FIELD TYPES
 //
 
-// caddyStatus is the HTTP status code (200).
-type caddyStatus int
+// caddyReferer is the client-supplied referer URL
+type caddyReferer []string
 
-// caddyStatus.String colorizes the status code.
-func (statusCode caddyStatus) String() string {
-	status := strconv.Itoa(int(statusCode))
-
-	if statusCode >= 200 && statusCode < 300 {
-		return green(status)
-	} else if statusCode >= 400 {
-		return red(status)
-	} else {
-		return yellow(status)
-	}
+// caddyReferer.String returns the longest referer.
+func (referers caddyReferer) String() string {
+	return longest(referers)
 }
 
 // caddyRemoteIP is the client IP.
@@ -82,12 +74,20 @@ func (cR caddyRemoteIP) String() string {
 	return yellow(remote)
 }
 
-// caddyReferer is the client-supplied referer URL
-type caddyReferer []string
+// caddyStatus is the HTTP status code (200).
+type caddyStatus int
 
-// caddyReferer.String returns the longest referer.
-func (referers caddyReferer) String() string {
-	return longest(referers)
+// caddyStatus.String colorizes the status code.
+func (statusCode caddyStatus) String() string {
+	status := strconv.Itoa(int(statusCode))
+
+	if statusCode >= 200 && statusCode < 300 {
+		return green(status)
+	} else if statusCode >= 400 {
+		return red(status)
+	} else {
+		return yellow(status)
+	}
 }
 
 // caddyTimeStamp is the timestamp of the request

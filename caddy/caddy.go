@@ -38,17 +38,13 @@ var (
 func format(cl *caddyLog) string {
 	msg := fmt.Sprintf("%s %s%s%s %s (%s) %s %s %s %s%s%s",
 		cl.Req.Remote,
-		bracketL,
-		cl.TS,
-		bracketR,
+		bracketL, cl.TS, bracketR,
 		cl.URL(),
 		cl.Status,
 		cl.Req.Method,
 		cl.Req.Proto,
 		cl.Req.Headers.Referer,
-		bracketL,
-		cl.Req.Headers.UA,
-		bracketR,
+		bracketL, cl.Req.Headers.UA, bracketR,
 	)
 
 	return whiteSpaceRE.ReplaceAllString(msg, " ") // Collapse whitespace
