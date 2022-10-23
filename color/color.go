@@ -29,9 +29,9 @@ type Color struct {
 
 // ColorizeString returns the string argument in a specific color.
 func ColorizeString(clr, s string) string {
-	c, ok := Colors[clr]
-	if !ok {
-		log.Fatalln("Color not found:", clr)
+	c, exists := Colors[clr]
+	if !exists {
+		log.Fatalln("Unknown color", clr)
 	}
 
 	return c.Colorizer(s)

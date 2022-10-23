@@ -41,20 +41,20 @@ func main() {
 	signal.Notify(signalChannel, syscall.SIGQUIT)
 
 	// Watch for Enter
-	stdinChannel := make(chan string)
-	go watchStdin(stdinChannel)
+	separatorChannel := make(chan string)
+	go watchStdin(separatorChannel)
 
-	// Each file sends log lines to textChannel
-	textChannel := make(chan string)
+	// Each file sends log lines to logChannel
+	logChannel := make(chan string)
 	for _, path := range config.Files {
-		go watchFile(path, textChannel)
+		go watchFile(path, logChannel)
 	}
 
 	for {
 		select {
-		case s := <-textChannel:
+		case s := <-logChannel:
 			fmt.Println(s)
-		case s := <-stdinChannel:
+		case s := <-separatorChannel:
 			fmt.Println(s)
 		case <-signalChannel:
 			// Ignore
@@ -77,7 +77,7 @@ func watchFile(path string, c chan<- string) {
 	}
 }
 
-// watchStdin sends a message up the provided channel whenever Enter
+// watchStdin sends a separator up the provided channel whenever Enter
 // is pressed. It uses password mode so that the input doesn't echo.
 func watchStdin(c chan<- string) {
 	for {
