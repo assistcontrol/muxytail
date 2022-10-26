@@ -41,6 +41,7 @@ func (cL *caddyLog) URL() string {
 // CADDY LOG FIELD TYPES
 //
 
+// ---
 // caddyReferer is the client-supplied referer URL
 type caddyReferer []string
 
@@ -49,6 +50,7 @@ func (referers caddyReferer) String() string {
 	return longest(referers)
 }
 
+// ---
 // caddyRemoteIP is the client IP.
 type caddyRemoteIP string
 
@@ -66,6 +68,7 @@ func (cR caddyRemoteIP) String() string {
 	return yellow(remote)
 }
 
+// ---
 // caddyStatus is the HTTP status code (200).
 type caddyStatus int
 
@@ -82,6 +85,7 @@ func (statusCode caddyStatus) String() string {
 	}
 }
 
+// ---
 // caddyTimeStamp is the timestamp of the request
 type caddyTimeStamp float64
 
@@ -93,6 +97,7 @@ func (cTS caddyTimeStamp) String() string {
 	return time.Unix(int64(cTS), 0).Format(timeFormat)
 }
 
+// ---
 // caddyUserAgent holds the client UA
 type caddyUserAgent []string
 
