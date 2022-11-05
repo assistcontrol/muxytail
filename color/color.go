@@ -16,7 +16,7 @@ var Colors = map[string]*Color{
 	"Yellow":  {Colorizer: termcolor.New(termcolor.FgYellow).Sprint},
 	"Red":     {Colorizer: termcolor.New(termcolor.FgRed).Sprint},
 	"BoldRed": {Colorizer: termcolor.New(termcolor.FgRed).Add(termcolor.Bold).Sprint},
-	"Danger":  {Colorizer: termcolor.New(termcolor.FgWhite).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint},
+	"Danger":  {Colorizer: termcolor.New(termcolor.FgBlack).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint},
 }
 
 // struct Color holds the configuration for each handled termcolor.
