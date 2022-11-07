@@ -1,4 +1,4 @@
-package main
+package muxytail
 
 import (
 	"flag"
@@ -29,7 +29,8 @@ var tailConfig = tail.Config{
 	ReOpen:    true,
 }
 
-func main() {
+// Run is essentially main(), whereas the real main() is a stub.
+func Run() {
 	configFile := flag.String("config", defaultConfigFile, "config file location")
 	flag.Parse()
 
