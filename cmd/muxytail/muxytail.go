@@ -6,9 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 
 	"github.com/assistcontrol/muxytail/caddy"
 	"github.com/assistcontrol/muxytail/color"
@@ -37,10 +35,6 @@ func Run() {
 	config := loadConfig(*configFile)
 	loadColors(config)
 
-	// Trap SIGQUIT to ignore ^\
-	signalChannel := make(chan os.Signal, 2)
-	signal.Notify(signalChannel, syscall.SIGQUIT)
-
 	// Watch for Enter
 	separatorChannel := make(chan string)
 	go watchStdin(separatorChannel)
@@ -57,8 +51,6 @@ func Run() {
 			fmt.Println(s)
 		case s := <-separatorChannel:
 			fmt.Println(s)
-		case <-signalChannel:
-			// Ignore
 		}
 	}
 }
