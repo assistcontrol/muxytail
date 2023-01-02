@@ -10,12 +10,12 @@ import (
 // struct for the caddy formatter. Each member is
 // a color string of format "#FG_RGB" or "#FG|#BG".
 type ColorConfig struct {
-	Bracket     string `json:"bracket"`
-	Host        string `json:"host"`
-	StatusOK    string `json:"status_ok"`
-	StatusError string `json:"status_error"`
-	StatusOther string `json:"status_other"`
-	URL         string `json:"url"`
+	Bracket     string `yaml:"bracket"`
+	Host        string `yaml:"host"`
+	StatusOK    string `yaml:"status_ok"`
+	StatusError string `yaml:"status_error"`
+	StatusOther string `yaml:"status_other"`
+	URL         string `yaml:"url"`
 }
 
 // colorize holds the colorizer functions for the
