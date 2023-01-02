@@ -20,13 +20,30 @@ type Color struct {
 	RE []*regexp.Regexp
 	// Colorizer is a function (generally from another package)
 	// that returns a colorized version of its string arguments.
-	Colorizer func(...any) string
+	Colorizer colorizerFunction
 }
+
+// ColorizeSeparator is the color function for the separator line.
+var ColorizeSeparator colorizerFunction
+
+// colorizerFunction is the signature for colorizer functions.
+type colorizerFunction func(...any) string
 
 // AddColor takes a color string, creates a renderer for it,
 // and adds it to the Colors map. It returns the Color so that
 // c.AddRE() can be chained.
 func AddColor(s string) *Color {
+	clr := &Color{
+		Colorizer: GenerateColorizer(s),
+	}
+
+	Colors[s] = clr
+	return clr
+}
+
+// GenerateColorizer returns a function that colorizes
+// a string argument.
+func GenerateColorizer(s string) colorizerFunction {
 	parts := strings.Split(s, "|")
 
 	tclr := termcolor.HEXStyle(parts[0])
@@ -34,12 +51,7 @@ func AddColor(s string) *Color {
 		tclr = termcolor.HEXStyle(parts[0], parts[1])
 	}
 
-	clr := &Color{
-		Colorizer: tclr.Sprint,
-	}
-
-	Colors[s] = clr
-	return clr
+	return tclr.Sprint
 }
 
 // ColorizeString returns the string argument in a specific color.

@@ -11,6 +11,8 @@ colorize:
   - Danger
   - Color 3
 
+separator: '#FF0000'
+
 caddy:
   bracket: '#FFFF00'
   host:  '#FFFF00'

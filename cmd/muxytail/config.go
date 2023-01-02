@@ -11,9 +11,10 @@ import (
 
 // Config
 type muxytailConf struct {
-	Files    []string
-	Colorize map[string][]string
-	Caddy    caddy.ColorConfig
+	Files     []string
+	Separator string
+	Colorize  map[string][]string
+	Caddy     caddy.ColorConfig
 }
 
 // loadConfig reads the config file and parses the YAML. It
@@ -37,6 +38,8 @@ func loadConfig(path string) *muxytailConf {
 
 // loadColors adds the provided regexps into each color's Color struct.
 func loadColors(conf *muxytailConf) {
+	color.ColorizeSeparator = color.GenerateColorizer(conf.Separator)
+
 	for clr, REs := range conf.Colorize {
 		color.AddColor(clr).AddRE(REs)
 	}
