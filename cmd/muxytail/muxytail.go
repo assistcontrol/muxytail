@@ -34,6 +34,7 @@ func Run() {
 
 	config := loadConfig(*configFile)
 	loadColors(config)
+	caddy.LoadColors(config.Caddy)
 
 	// Watch for Enter
 	separatorChannel := make(chan string)

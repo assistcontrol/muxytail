@@ -4,27 +4,42 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
-	termcolor "github.com/fatih/color"
+	termcolor "github.com/gookit/color"
 )
 
-// map Colors is the list of known colors. After adding a color
-// here, be sure to add a key of the same name in muxytail.conf.
-var Colors = map[string]*Color{
-	"Blue":    {Colorizer: termcolor.New(termcolor.FgBlue).Sprint},
-	"Green":   {Colorizer: termcolor.New(termcolor.FgGreen).Sprint},
-	"Yellow":  {Colorizer: termcolor.New(termcolor.FgYellow).Sprint},
-	"Red":     {Colorizer: termcolor.New(termcolor.FgRed).Sprint},
-	"BoldRed": {Colorizer: termcolor.New(termcolor.FgRed).Add(termcolor.Bold).Sprint},
-	"Danger":  {Colorizer: termcolor.New(termcolor.FgBlack).Add(termcolor.Bold).Add(termcolor.BgRed).Sprint},
-}
+// map Colors is the list of known colors. Colors are added
+// with AddColor(), and REs are added to that color with
+// c.AddRE().
+var Colors = make(map[string]*Color)
 
 // struct Color holds the configuration for each handled termcolor.
 type Color struct {
 	// RE is a slice of regexps that, when matched, are colorized
 	RE []*regexp.Regexp
-	// Colorizer is a Sprint() method of a color from fatih/color
+	// Colorizer is a function (generally from another package)
+	// that returns a colorized version of its string arguments.
 	Colorizer func(...any) string
+}
+
+// AddColor takes a color string, creates a renderer for it,
+// and adds it to the Colors map. It returns the Color so that
+// c.AddRE() can be chained.
+func AddColor(s string) *Color {
+	parts := strings.Split(s, "|")
+
+	tclr := termcolor.HEXStyle(parts[0])
+	if len(parts) == 2 {
+		tclr = termcolor.HEXStyle(parts[0], parts[1])
+	}
+
+	clr := &Color{
+		Colorizer: tclr.Sprint,
+	}
+
+	Colors[s] = clr
+	return clr
 }
 
 // ColorizeString returns the string argument in a specific color.

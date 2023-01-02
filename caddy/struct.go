@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/assistcontrol/muxytail/color"
 	"github.com/mileusna/useragent"
 )
 
@@ -34,7 +33,7 @@ type caddyLog struct {
 
 // caddyLog.URL constructs a request path (foo.com/bar.html)
 func (cL *caddyLog) URL() string {
-	return blue(cL.Req.Host + cL.Req.URI)
+	return colorize.URL(cL.Req.Host + cL.Req.URI)
 }
 
 //
@@ -60,12 +59,12 @@ func (cR caddyRemoteIP) String() string {
 	remote := string(cR)
 	rev, err := net.LookupAddr(remote)
 	if err != nil || len(rev) == 0 {
-		return blue(remote)
+		return colorize.Host(remote)
 	}
 
 	// Trim trailing .
 	remote = strings.TrimSuffix(rev[0], ".")
-	return yellow(remote)
+	return colorize.Host(remote)
 }
 
 // ---
@@ -77,11 +76,11 @@ func (statusCode caddyStatus) String() string {
 	status := strconv.Itoa(int(statusCode))
 
 	if statusCode >= 200 && statusCode < 300 {
-		return green(status)
+		return colorize.StatusOK(status)
 	} else if statusCode >= 400 {
-		return red(status)
+		return colorize.StatusError(status)
 	} else {
-		return yellow(status)
+		return colorize.StatusOther(status)
 	}
 }
 
@@ -126,11 +125,6 @@ func (cUA caddyUserAgent) String() string {
 //
 // HELPER FUNCTIONS
 //
-
-func blue(s string) string   { return color.ColorizeString("Blue", s) }
-func green(s string) string  { return color.ColorizeString("Green", s) }
-func yellow(s string) string { return color.ColorizeString("Yellow", s) }
-func red(s string) string    { return color.ColorizeString("Red", s) }
 
 // major returns the major only from a semver version string
 func major(s string) string {

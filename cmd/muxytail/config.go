@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/assistcontrol/muxytail/caddy"
 	"github.com/assistcontrol/muxytail/color"
 	"gopkg.in/yaml.v3"
 )
@@ -12,6 +13,7 @@ import (
 type muxytailConf struct {
 	Files    []string
 	Colorize map[string][]string
+	Caddy    caddy.ColorConfig
 }
 
 // loadConfig reads the config file and parses the YAML. It
@@ -35,7 +37,7 @@ func loadConfig(path string) *muxytailConf {
 
 // loadColors adds the provided regexps into each color's Color struct.
 func loadColors(conf *muxytailConf) {
-	for colorName, clr := range color.Colors {
-		clr.AddRE(conf.Colorize[colorName])
+	for clr, REs := range conf.Colorize {
+		color.AddColor(clr).AddRE(REs)
 	}
 }

@@ -24,18 +24,16 @@ func Convert(in string) (string, bool) {
 	return format(cl), true
 }
 
-var (
-	bracketL = yellow("[")
-	bracketR = yellow("]")
-
-	// regexp whiteSpaceRE is a regexp matching spaces so that they
-	// can be collapsed later.
-	whiteSpaceRE = regexp.MustCompile(`\s+`)
-)
+// regexp whiteSpaceRE is a regexp matching spaces so that they
+// can be collapsed later.
+var whiteSpaceRE = regexp.MustCompile(`\s+`)
 
 // format returns the formatted log. It relies on caddyLog struct
 // fields doing their magic in String() methods.
 func format(cl *caddyLog) string {
+	bracketL := colorize.Bracket("[")
+	bracketR := colorize.Bracket("]")
+
 	msg := fmt.Sprintf("%s %s%s%s %s (%s) %s %s %s %s%s%s",
 		cl.Req.Remote,
 		bracketL, cl.TS, bracketR,

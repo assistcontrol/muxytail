@@ -3,16 +3,18 @@ files:
 - b
 
 colorize:
-  Danger:
-  - 'Blocking ".*" (forever|for [0-9]* secs) .*'
-  Blue:
-  # - '\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}'
-  Green:
-  - 'Accepted [^ ]* for [^ ]* from [^ ]* port.*'
-  BoldRed:
-  - kernel
-  - 'kernel: .* segfault at .*'
-  - 'Attack from.*with danger.*'
-  - 'Invalid user [^ ]* from [0-9\.]*'
-  - 'Disconnecting: Too many authentication failures for.*'
-  - 'ASSERTION FAILED: .*'
+  '#FF0000':
+  - Color 1
+  '#0000FF':
+  - Color 2
+  '#FFFFFF|#FF0000':
+  - Danger
+  - Color 3
+
+caddy:
+  bracket: '#FFFF00'
+  host:  '#FFFF00'
+  status_ok: '#00FF00'
+  status_error: '#FF0000'
+  status_other: '#FFFF00'
+  url: '#0000FF'
