@@ -6,10 +6,12 @@ import (
 	"io"
 	"log"
 	"os"
-	"strings"
 
-	"github.com/assistcontrol/muxytail/caddy"
-	"github.com/assistcontrol/muxytail/color"
+	"github.com/assistcontrol/muxytail/config"
+	"github.com/assistcontrol/muxytail/formatter"
+	"github.com/assistcontrol/muxytail/formatter/caddy"
+	"github.com/assistcontrol/muxytail/formatter/regex"
+	"github.com/assistcontrol/muxytail/separator"
 
 	"github.com/nxadm/tail"
 	"golang.org/x/term"
@@ -32,18 +34,20 @@ func Run() {
 	configFile := flag.String("config", defaultConfigFile, "config file location")
 	flag.Parse()
 
-	config := loadConfig(*configFile)
-	loadColors(config)
-	caddy.LoadColors(config.Caddy)
+	conf := config.Load(*configFile)
+	formatters := formatter.List{
+		caddy.New(conf.Caddy),
+		regex.New(conf.Colorize),
+	}
 
 	// Watch for Enter
 	separatorChannel := make(chan string)
-	go watchStdin(separatorChannel)
+	go watchStdin(separatorChannel, separator.New(conf.Separator))
 
 	// Each file sends log lines to logChannel
 	logChannel := make(chan string)
-	for _, path := range config.Files {
-		go watchFile(path, logChannel)
+	for _, path := range conf.Files {
+		go watchFile(path, formatters, logChannel)
 	}
 
 	for {
@@ -58,7 +62,7 @@ func Run() {
 
 // watchFile tails a given path and sends all new lines up the provided
 // channel after formatting.
-func watchFile(path string, c chan<- string) {
+func watchFile(path string, formatters formatter.List, c chan<- string) {
 	t, err := tail.TailFile(path, tailConfig)
 	if err != nil {
 		log.Fatalln(err)
@@ -66,43 +70,36 @@ func watchFile(path string, c chan<- string) {
 
 	for line := range t.Lines {
 		go func(s string) {
-			c <- format(s)
+			c <- format(s, formatters)
 		}(line.Text)
 	}
 }
 
-// watchStdin sends a separator up the provided channel whenever Enter
-// is pressed. It uses password mode so that the input doesn't echo.
-func watchStdin(c chan<- string) {
+// watchStdin sends a separator up the provided channel whenever
+// Enter is pressed. It uses password mode so that the input
+// doesn't echo.
+func watchStdin(c chan<- string, sep *separator.Separator) {
 	for {
 		if _, err := term.ReadPassword(int(os.Stdin.Fd())); err != nil {
 			log.Fatalln("ReadPassword:", err)
 		}
 
-		c <- separator()
+		go func() {
+			c <- sep.Display()
+		}()
 	}
 }
 
-// format is the master function for log line manipulation. It returns
-// its string argument converted, formatted, and colorized.
-func format(s string) string {
-	if s, converted := caddy.Convert(s); converted {
-		return s
+// format applies its string argument sequentially to each formatter.
+// Formatting stops after the first formatter that indicates
+// successful formatting.
+func format(in string, formatters formatter.List) string {
+	for _, f := range formatters {
+		if out, ok := f.Format(in); ok {
+			return out
+		}
 	}
 
-	// Not a caddy string. Apply regexp colorizers.
-	s = color.Colorize(s)
-
-	return s
-}
-
-// separator returns a string containing a horizontal line the width of the
-// terminal.
-func separator() string {
-	width, _, err := term.GetSize(int(os.Stdout.Fd()))
-	if err != nil {
-		log.Fatalln("term.GetSize:", err)
-	}
-
-	return color.ColorizeSeparator(strings.Repeat("─", width))
+	// No formatter was successful
+	return in
 }

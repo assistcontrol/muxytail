@@ -10,13 +10,16 @@ colorize:
   '#FFFFFF|#FF0000':
   - Danger
   - Color 3
+  '':
+  - Uncolor
 
-separator: '#FF0000'
+separator:
+  color: '#FF0000'
 
 caddy:
-  bracket: '#FFFF00'
-  host:  '#FFFF00'
-  status_ok: '#00FF00'
+  bracket:      '#FFFF00'
+  host:         '#FFFF00'
+  status_ok:    '#00FF00'
   status_error: '#FF0000'
   status_other: '#FFFF00'
-  url: '#0000FF'
+  url:          '#0000FF'

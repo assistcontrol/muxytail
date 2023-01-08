@@ -3,7 +3,6 @@ package caddy
 import (
 	"fmt"
 	"net"
-	"strconv"
 	"strings"
 	"time"
 
@@ -33,7 +32,7 @@ type caddyLog struct {
 
 // caddyLog.URL constructs a request path (foo.com/bar.html)
 func (cL *caddyLog) URL() string {
-	return colorize.URL(cL.Req.Host + cL.Req.URI)
+	return cL.Req.Host + cL.Req.URI
 }
 
 //
@@ -59,30 +58,17 @@ func (cR caddyRemoteIP) String() string {
 	remote := string(cR)
 	rev, err := net.LookupAddr(remote)
 	if err != nil || len(rev) == 0 {
-		return colorize.Host(remote)
+		return remote
 	}
 
 	// Trim trailing .
 	remote = strings.TrimSuffix(rev[0], ".")
-	return colorize.Host(remote)
+	return remote
 }
 
 // ---
 // caddyStatus is the HTTP status code (200).
 type caddyStatus int
-
-// caddyStatus.String colorizes the status code.
-func (statusCode caddyStatus) String() string {
-	status := strconv.Itoa(int(statusCode))
-
-	if statusCode >= 200 && statusCode < 300 {
-		return colorize.StatusOK(status)
-	} else if statusCode >= 400 {
-		return colorize.StatusError(status)
-	} else {
-		return colorize.StatusOther(status)
-	}
-}
 
 // ---
 // caddyTimeStamp is the timestamp of the request
