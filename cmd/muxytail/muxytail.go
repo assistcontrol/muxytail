@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 
+	"atomicgo.dev/keyboard"
+	"atomicgo.dev/keyboard/keys"
 	"github.com/assistcontrol/muxytail/config"
 	"github.com/assistcontrol/muxytail/formatter"
 	"github.com/assistcontrol/muxytail/formatter/caddy"
@@ -14,7 +16,6 @@ import (
 	"github.com/assistcontrol/muxytail/separator"
 
 	"github.com/nxadm/tail"
-	"golang.org/x/term"
 )
 
 // Default path to the config file. Can be overridden with --config.
@@ -75,18 +76,28 @@ func watchFile(path string, formatters formatter.List, c chan<- string) {
 	}
 }
 
-// watchStdin sends a separator up the provided channel whenever
-// Enter is pressed. It uses password mode so that the input
-// doesn't echo.
+// watchStdin listens for keybaord events. On Enter, a separator is
+// passed up the provided channel. On Esc or ^C, the program exits.
 func watchStdin(c chan<- string, sep *separator.Separator) {
-	for {
-		if _, err := term.ReadPassword(int(os.Stdin.Fd())); err != nil {
-			log.Fatalln("ReadPassword:", err)
+	onKey := func(key keys.Key) (bool, error) {
+		switch key.Code {
+		case keys.Enter:
+			go func() {
+				c <- sep.Display()
+			}()
+		case keys.CtrlC:
+			os.Exit(0)
+		case keys.RuneKey:
+			if key.String() == "q" {
+				os.Exit(0)
+			}
 		}
 
-		go func() {
-			c <- sep.Display()
-		}()
+		return false, nil // Continue listening
+	}
+
+	if err := keyboard.Listen(onKey); err != nil {
+		log.Fatalln("keyboard.Listen:", err)
 	}
 }
 
