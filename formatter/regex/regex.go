@@ -8,6 +8,10 @@ import (
 	"github.com/assistcontrol/muxytail/config"
 )
 
+// regexList is a slice of known reColor structs. It is created
+// by regex.New(). New colors are added by .AddColor().
+type colorList []*reColor
+
 // struct reColor holds the configuration for a RE-based
 // colorizer. reColor.RE is the slice of regexps that, when
 // matched, are colorized by the reColor.Colorizer function.
@@ -26,28 +30,15 @@ func (rc *reColor) addREs(REs []string) {
 	}
 }
 
-// rc.colorize applies rc.Colorizer for each regexp in rc.RE to
-// the provided string. It returns a fully-colorized string for
-// the color that this reColor handles.
-func (rc *reColor) colorize(s string) string {
-	for _, re := range rc.RE {
-		s = re.ReplaceAllString(s, rc.Colorizer("$1"))
-	}
-
-	return s
-}
-
-// regexList is a slice of known reColor structs. It is created
-// by regex.New(). New colors are added by .AddColor().
-type regexList []*reColor
-
 // res.Format is the main function that handles colorization. It
 // applies each regeistered color to all matches of each RE.
-func (res regexList) Format(in string) (string, bool) {
+func (colors colorList) Format(in string) (string, bool) {
 	out := in
 
-	for _, clr := range res {
-		out = clr.colorize(out)
+	for _, clr := range colors {
+		for _, re := range clr.RE {
+			out = re.ReplaceAllString(out, clr.Colorizer("$1"))
+		}
 	}
 
 	return out, in != out
@@ -55,8 +46,8 @@ func (res regexList) Format(in string) (string, bool) {
 
 // New creates a new regex formatter. It takes a config.REConfig
 // and returns a formatter that colorizes matches of each regexp.
-func New(conf config.REConfig) regexList {
-	reList := make(regexList, 0, len(conf))
+func New(conf config.REConfig) colorList {
+	colors := make(colorList, 0, len(conf))
 
 	for colorString, REs := range conf {
 		rc := &reColor{
@@ -64,8 +55,8 @@ func New(conf config.REConfig) regexList {
 		}
 		rc.addREs(REs)
 
-		reList = append(reList, rc)
+		colors = append(colors, rc)
 	}
 
-	return reList
+	return colors
 }
