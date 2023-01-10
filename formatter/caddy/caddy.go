@@ -24,7 +24,7 @@ type colorizer struct {
 	URL                                color.Colorizer
 }
 
-// clr.Format parses a JSON-formatted caddy log entry, formats it
+// Format parses a JSON-formatted caddy log entry, formats it
 // into a legible style, and colorizes it. It returns the formatted
 // line and a boolean indicating whether formatting was successful.
 // If bool is false, the input was not a well-formed caddy JSON log
@@ -41,7 +41,7 @@ func (clr *colorizer) Format(in string) (string, bool) {
 	return out, true
 }
 
-// clr.formatLog takes a parsed caddyLog struct, formats it, and
+// formatLog takes a parsed caddyLog struct, formats it, and
 // colorizes it.
 func (clr *colorizer) formatLog(cLog *caddyLog) string {
 	bracketL := clr.Bracket("[")
@@ -61,7 +61,7 @@ func (clr *colorizer) formatLog(cLog *caddyLog) string {
 	return s
 }
 
-// clr.colorizeStatus colorizes the supplied HTTP status code
+// colorizeStatus colorizes the supplied HTTP status code
 // based on its numeric range.
 func (clr *colorizer) colorizeStatus(statusCode caddyStatus) string {
 	status := strconv.Itoa(int(statusCode))

@@ -18,7 +18,7 @@ type Separator struct {
 	Colorizer color.Colorizer
 }
 
-// s.Display repeats s.Char across the terminal, and applies
+// Display repeats s.Char across the terminal, and applies
 // s.Colorizer to it.
 func (s *Separator) Display() string {
 	width, _, err := term.GetSize(int(os.Stdout.Fd()))

@@ -8,7 +8,7 @@ import (
 	"github.com/assistcontrol/muxytail/config"
 )
 
-// regexList is a slice of known reColor structs. It is created
+// colorList is a slice of known reColor structs. It is created
 // by regex.New(). New colors are added by .AddColor().
 type colorList []*reColor
 
@@ -20,7 +20,7 @@ type reColor struct {
 	Colorizer color.Colorizer
 }
 
-// rc.addREs turns a slice of strings into regexps and appends
+// addREs turns a slice of strings into regexps and appends
 // them to the RE field. The string arguments are converted to
 // regexps by surrounding them in parentheses.
 func (rc *reColor) addREs(REs []string) {
@@ -30,8 +30,8 @@ func (rc *reColor) addREs(REs []string) {
 	}
 }
 
-// res.Format is the main function that handles colorization. It
-// applies each regeistered color to all matches of each RE.
+// Format is the main function that handles colorization. It
+// applies each registered color to all matches of each RE.
 func (colors colorList) Format(in string) (string, bool) {
 	out := in
 
