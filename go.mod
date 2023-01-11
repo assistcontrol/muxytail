@@ -3,7 +3,7 @@ module github.com/assistcontrol/muxytail
 go 1.19
 
 require (
-	atomicgo.dev/keyboard v0.2.8
+	atomicgo.dev/keyboard v0.2.9
 	github.com/gookit/color v1.5.2
 	github.com/mileusna/useragent v1.2.1
 	github.com/nxadm/tail v1.4.8
