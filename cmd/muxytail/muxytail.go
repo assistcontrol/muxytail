@@ -43,7 +43,8 @@ func Run() {
 
 	// Watch for Enter
 	separatorChannel := make(chan string)
-	go watchStdin(separatorChannel, separator.New(conf.Separator))
+	exitChannel := make(chan bool)
+	go watchStdin(separatorChannel, exitChannel, separator.New(conf.Separator))
 
 	// Each file sends log lines to logChannel
 	logChannel := make(chan string)
@@ -57,6 +58,8 @@ func Run() {
 			fmt.Println(s)
 		case s := <-separatorChannel:
 			fmt.Println(s)
+		case <-exitChannel:
+			os.Exit(0)
 		}
 	}
 }
@@ -76,20 +79,20 @@ func watchFile(path string, formatters formatter.List, c chan<- string) {
 	}
 }
 
-// watchStdin listens for keybaord events. On Enter, a separator is
+// watchStdin listens for keyboard events. On Enter, a separator is
 // passed up the provided channel. On Esc or ^C, the program exits.
-func watchStdin(c chan<- string, sep *separator.Separator) {
+func watchStdin(sepCh chan<- string, exitCh chan<- bool, sep *separator.Separator) {
 	onKey := func(key keys.Key) (bool, error) {
 		switch key.Code {
 		case keys.Enter:
 			go func() {
-				c <- sep.Display()
+				sepCh <- sep.Display()
 			}()
 		case keys.CtrlC:
-			os.Exit(0)
+			exitCh <- true
 		case keys.RuneKey:
 			if key.String() == "q" {
-				os.Exit(0)
+				exitCh <- true
 			}
 		}
 
