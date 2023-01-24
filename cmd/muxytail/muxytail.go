@@ -94,10 +94,10 @@ func watchStdin(sepCh chan<- string, exitCh chan<- bool, sep *separator.Separato
 				sepCh <- sep.Display()
 			}()
 		case keys.CtrlC:
-			exitCh <- true
+			return true, nil // Stop listening
 		case keys.RuneKey:
 			if key.String() == "q" {
-				exitCh <- true
+				return true, nil
 			}
 		}
 
@@ -107,6 +107,8 @@ func watchStdin(sepCh chan<- string, exitCh chan<- bool, sep *separator.Separato
 	if err := keyboard.Listen(onKey); err != nil {
 		log.Fatalln("keyboard.Listen:", err)
 	}
+
+	exitCh <- true
 }
 
 // format applies its string argument sequentially to each formatter.
