@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 
 	"atomicgo.dev/keyboard"
 	"atomicgo.dev/keyboard/keys"
@@ -59,7 +58,7 @@ func Run() {
 		case s := <-separatorChannel:
 			fmt.Println(s)
 		case <-exitChannel:
-			os.Exit(0)
+			return
 		}
 	}
 }
@@ -71,6 +70,12 @@ func watchFile(path string, formatters formatter.List, c chan<- string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	defer func() {
+		if err = t.Stop(); err != nil {
+			log.Fatalln(err)
+		}
+	}()
 
 	for line := range t.Lines {
 		go func(s string) {
