@@ -68,12 +68,12 @@ func Run() {
 func watchFile(path string, formatters formatter.List, c chan<- string) {
 	t, err := tail.TailFile(path, tailConfig)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 
 	defer func() {
 		if err = t.Stop(); err != nil {
-			log.Fatalln(err)
+			log.Fatal(err)
 		}
 	}()
 
