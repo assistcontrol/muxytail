@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
-        uses: willabides/setup-go-faster
+        uses: willabides/setup-go-faster@v1
         with:
           go-version: '*'
 
