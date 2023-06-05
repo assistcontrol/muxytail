@@ -5,7 +5,7 @@ go 1.19
 require (
 	atomicgo.dev/keyboard v0.2.9
 	github.com/gookit/color v1.5.3
-	github.com/mileusna/useragent v1.3.2
+	github.com/mileusna/useragent v1.3.3
 	github.com/nxadm/tail v1.4.8
 	golang.org/x/term v0.8.0
 	gopkg.in/yaml.v3 v3.0.1
