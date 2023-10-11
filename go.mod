@@ -6,7 +6,7 @@ require (
 	atomicgo.dev/keyboard v0.2.9
 	github.com/gookit/color v1.5.4
 	github.com/mileusna/useragent v1.3.4
-	github.com/nxadm/tail v1.4.8
+	github.com/nxadm/tail v1.4.11
 	golang.org/x/term v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
 )
