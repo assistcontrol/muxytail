@@ -9,8 +9,6 @@ import (
 )
 
 func TestSeparator_Display(t *testing.T) {
-	want := strings.Repeat(separatorChar, 80)
-
 	tests := []struct {
 		name      string
 		colorizer color.Colorizer
@@ -19,12 +17,12 @@ func TestSeparator_Display(t *testing.T) {
 		{
 			name:      "Default colorizer",
 			colorizer: color.GenerateColorizer(""),
-			want:      want,
+			want:      strings.Repeat(separatorChar, 80),
 		},
 		{
 			name:      "Red colorizer",
 			colorizer: color.GenerateColorizer("#ff0000"),
-			want:      termcolor.HEXStyle("#ff0000").Sprintf(want),
+			want:      termcolor.HEXStyle("#ff0000").Sprint(strings.Repeat(separatorChar, 80)),
 		},
 	}
 
