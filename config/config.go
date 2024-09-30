@@ -44,12 +44,20 @@ func Load(path string) *MuxytailConf {
 		log.Fatalln("ReadFile:", err)
 	}
 
-	// Unmarshal the config into a muxytailConf
-	var config MuxytailConf
-	err = yaml.Unmarshal(confBytes, &config)
+	c, err := unmarshal(confBytes)
 	if err != nil {
-		log.Fatalln("YAML parse:", err)
+		log.Fatalln("unmarshal:", err)
 	}
 
-	return &config
+	return c
+}
+
+func unmarshal(data []byte) (*MuxytailConf, error) {
+	var config MuxytailConf
+	err := yaml.Unmarshal(data, &config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &config, nil
 }

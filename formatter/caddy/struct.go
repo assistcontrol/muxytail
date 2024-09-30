@@ -15,19 +15,23 @@ import (
 
 // struct caddyLog is holds a single caddy log entry.
 type caddyLog struct {
-	Req struct {
-		Headers struct {
-			Referer caddyReferer   `json:"Referer"`
-			UA      caddyUserAgent `json:"User-Agent"`
-		} `json:"headers"`
-		Host   string        `json:"host"`
-		Method string        `json:"method"`
-		Proto  string        `json:"proto"`
-		Remote caddyRemoteIP `json:"remote_ip"`
-		URI    string        `json:"uri"`
-	} `json:"request"`
+	Req    caddyReq       `json:"request"`
 	Status caddyStatus    `json:"status"`
 	TS     caddyTimeStamp `json:"ts"`
+}
+
+type caddyReq struct {
+	Headers caddyHeaders  `json:"headers"`
+	Host    string        `json:"host"`
+	Method  string        `json:"method"`
+	Proto   string        `json:"proto"`
+	Remote  caddyRemoteIP `json:"remote_ip"`
+	URI     string        `json:"uri"`
+}
+
+type caddyHeaders struct {
+	Referer caddyReferer   `json:"Referer"`
+	UA      caddyUserAgent `json:"User-Agent"`
 }
 
 // caddyLog.URL constructs a request path (foo.com/bar.html)
