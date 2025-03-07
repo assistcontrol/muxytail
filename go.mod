@@ -1,6 +1,8 @@
 module github.com/assistcontrol/muxytail
 
-go 1.19
+go 1.23.0
+
+toolchain go1.24.0
 
 require (
 	atomicgo.dev/keyboard v0.2.9
